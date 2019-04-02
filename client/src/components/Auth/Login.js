@@ -1,11 +1,27 @@
 import React from "react";
+import { GraphQLClient } from 'graphql-request';
 import GoogleLogin from 'react-google-login';
 import { withStyles } from "@material-ui/core/styles";
-// import Typography from "@material-ui/core/Typography";
+
+const ME_QUERY = `
+  {
+    me {
+      _id
+      name
+      email
+      picture
+    }
+  }
+`;
 
 const Login = ({ classes }) => {
-  const onSuccess = (googleUser) => {
-    console.log('on success', googleUser, classes);
+  const onSuccess = async googleUser => {
+    const { tokenId } = googleUser;
+    const client = new GraphQLClient('http://localhost:4000/graphql', {
+      headers: { authorization: tokenId }
+    })
+    const data = await client.request(ME_QUERY);
+    console.log(data);
   }
   return <GoogleLogin clientId="425993808005-tq26jpnsupbrupqvtcjn8es2nl3qkc95.apps.googleusercontent.com" onSuccess={onSuccess} onFailure={err => console.log('fail', err)} isSignedIn={true} />;
 };
