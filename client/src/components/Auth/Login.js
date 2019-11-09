@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Typography } from '@material-ui/core'
 import Context from '../../context';
 import { GraphQLClient } from 'graphql-request';
 import GoogleLogin from 'react-google-login';
@@ -18,15 +19,31 @@ const ME_QUERY = `
 const Login = ({ classes }) => {
   const { dispatch } = useContext(Context)
   const onSuccess = async googleUser => {
-    const tokenId  = googleUser.getAuthResponse().id_token;
-    const client = new GraphQLClient('http://localhost:4000/graphql', {
-      headers: { authorization: tokenId }
-    })
-    const data = await client.request(ME_QUERY);
-    dispatch({ type: 'LOGIN_USER', payload: data.me })
-    console.log('data', data);
+    try {
+      const tokenId  = googleUser.getAuthResponse().id_token;
+      const client = new GraphQLClient('http://localhost:4000/graphql', {
+        headers: { authorization: tokenId }
+      })
+      const { me } = await client.request(ME_QUERY);
+      dispatch({ type: 'LOGIN_USER', payload: me })
+    } catch (error) {
+      onFailure();
+    }
   }
-  return <GoogleLogin clientId="425993808005-tq26jpnsupbrupqvtcjn8es2nl3qkc95.apps.googleusercontent.com" onSuccess={onSuccess} onFailure={err => console.log('fail', err)} isSignedIn={true} />;
+
+  const onFailure = err => {
+    console.error('error login', err);
+  }
+
+  return (
+    <GoogleLogin
+      clientId="425993808005-tq26jpnsupbrupqvtcjn8es2nl3qkc95.apps.googleusercontent.com"
+      onSuccess={onSuccess}
+      onFailure={onFailure}
+      isSignedIn={true}
+      theme="dark"
+    />
+  ) ;
 };
 
 const styles = {
