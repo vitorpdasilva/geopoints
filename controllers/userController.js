@@ -10,14 +10,15 @@ exports.findOrCreateUser = async token => {
 }
 
 const verifyAuthToken = async token => {
+  console.log('usercontroller', token);
   try {
-    await client.verifyIdToken({
+    const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.OAUTH_CLIENT_ID
     })
-    return ticket.getPayLoad()
+    return ticket.getPayload()
   } catch (err) {
-    console.log('fail auth token', err);
+    console.log('fail auth tokenn', err);
   }
 }
 

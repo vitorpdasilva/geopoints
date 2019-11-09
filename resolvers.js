@@ -8,8 +8,9 @@ const user = {
 }
 
 const authenticated = next => (root, args, ctx, info) => {
+  console.log('resolver', ctx);
   if (!ctx.currentUser) {
-    throw new AuthenticationError('you must be logged in');
+    throw new AuthenticationError('you must bee logged in');
   }
   return next(root, args, ctx, info);
 }
