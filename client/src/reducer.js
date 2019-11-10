@@ -7,10 +7,15 @@ export default function reducer(state, { type, payload }) { //state and actions.
         currentUser: payload,
       }
     case "IS_LOGGED_IN":
-        return {
-          ...state,
-          isAuth: payload,
-        }
+      return {
+        ...state,
+        isAuth: payload,
+      }
+    case "SIGNOUT_USER":
+      return {
+        ...state,
+        currentUser: null,
+      }
     default:
       return state;
   }

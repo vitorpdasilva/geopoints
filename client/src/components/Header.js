@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import MapIcon from '@material-ui/icons/Map';
 import Typography from "@material-ui/core/Typography";
 import Context from '../context';
+import Signout from '../components/Auth/Signout';
 
 const Header = ({ classes }) => {
   const { state } = useContext(Context);
@@ -17,14 +18,13 @@ const Header = ({ classes }) => {
             <MapIcon className={classes.icon} />
             <Typography
               component="h1"
-              variant="h6"
+              variant="h4"
               color="inherit"
               noWrap
             >
               geopins
             </Typography>
           </div>
-          {console.log(currentUser)}
           {currentUser && (
             <div className={classes.grow}>
               <img
@@ -35,6 +35,7 @@ const Header = ({ classes }) => {
               <Typography variant="h5" color="inherit" noWrap >{currentUser.name}</Typography>
             </div>
           )}
+          <Signout />
         </Toolbar>
      </AppBar>
    </div> 
