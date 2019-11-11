@@ -16,9 +16,8 @@ const Signout = ({ classes }) => {
     <GoogleLogout
       onLogoutSuccess={onSignout}
       render={({ onClick }) => (
-        <span className={classes.root} onClick={onclick}>
-          <Typography variant="h6" className={classes.buttonText}>Sign Out</Typography>
-          <ExitToAppIcon />
+        <span className={classes.root} onClick={onClick}>
+          <Typography variant="h6" className={classes.buttonText}>Sign Out<ExitToAppIcon /></Typography>
         </span>
       )}
     />

@@ -53,6 +53,7 @@ const Login = ({ classes }) => {
         onSuccess={onSuccess}
         onFailure={onFailure}
         theme="dark"
+        isSignedIn={true}
       />
     </div>
   );
