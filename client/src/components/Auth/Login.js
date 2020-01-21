@@ -3,6 +3,7 @@ import { Typography } from '@material-ui/core'
 import Context from '../../context';
 import { GraphQLClient } from 'graphql-request';
 import GoogleLogin from 'react-google-login';
+import { BASE_URL } from '../../client';
 import { withStyles } from "@material-ui/core/styles";
 
 const ME_QUERY = `
@@ -21,7 +22,7 @@ const Login = ({ classes }) => {
   const onSuccess = async googleUser => {
     try {
       const tokenId  = googleUser.getAuthResponse().id_token;
-      const client = new GraphQLClient('http://localhost:4000/graphql', {
+      const client = new GraphQLClient(BASE_URL, {
         headers: { authorization: tokenId }
       })
       const { me } = await client.request(ME_QUERY);
