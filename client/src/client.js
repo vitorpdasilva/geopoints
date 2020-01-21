@@ -7,8 +7,8 @@ export const useClient = () => {
   const [idToken, setIdtoken] = useState("");
   
   useEffect(() => {
-    const token = window.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
-    setIdtoken(token);
+    const { id_token } = window.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse();
+    setIdtoken(id_token);
   }, [])
   return new GraphQLClient(BASE_URL, {
     headers: { authorization: idToken}

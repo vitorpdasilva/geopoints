@@ -4,18 +4,9 @@ import Context from '../../context';
 import { GraphQLClient } from 'graphql-request';
 import GoogleLogin from 'react-google-login';
 import { BASE_URL } from '../../client';
+import { ME_QUERY } from '../../graphql/queries';
 import { withStyles } from "@material-ui/core/styles";
 
-const ME_QUERY = `
-  {
-    me {
-      _id
-      name
-      email
-      picture
-    }
-  }
-`;
 
 const Login = ({ classes }) => {
   const { dispatch } = useContext(Context)
