@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { GraphQLClient } from 'graphql-request';
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -8,25 +9,48 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhotoTwoTone";
 import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
+import { CREATE_PIN_MUTATION } from '../../graphql/mutations';
 import Context from '../../context';
 
 const CreatePin = ({ classes }) => {
-  const { dispatch } = useContext(Context);
+  const { state, dispatch } = useContext(Context);
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async event => {
-    event.preventDefault();
-    const url = await handleImageUpload();
-    console.log({title, image, content, url});
+    try {
+      event.preventDefault();
+      setSubmitting(true);
+      const idToken = window.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+      const url = await handleImageUpload();
+      const client = new GraphQLClient('http://localhost:4000/graphql', { // the port your backend is running
+        headers: { authorization: idToken }
+      })
+      const { latitude, longitude } = state.draft;
+      const variables = {
+        title,
+        image: url,
+        content,
+        latitude,
+        longitude,
 
+      }
+      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables);
+      console.log("Pin created", { createPin });
+      handleDeleteDraft()
+    } catch (err) {
+      setSubmitting(false);
+      console.log(err);
+    }
+    
   }
 
   const handleDeleteDraft = () => {
     setTitle("");
     setImage("");
-    setContent("")
+    setContent("");
     dispatch({ type: "DELETE_DRAFT" })
   }
 
@@ -104,7 +128,7 @@ const CreatePin = ({ classes }) => {
           variant="contained"
           color="secondary"
           onClick={handleSubmit}
-          disabled={!title.trim() || !content.trim() || !image}
+          disabled={!title.trim() || !content.trim() || !image || submitting}
         >
           Submit
           <SaveIcon className={classes.rightIcon} />
