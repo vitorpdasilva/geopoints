@@ -2,7 +2,6 @@ const { AuthenticationError } = require('apollo-server');
 const Pin = require("./models/Pin");
 
 const authenticated = next => (root, args, ctx, info) => {
-  console.log('resolver', ctx);
   if (!ctx.currentUser) {
     throw new AuthenticationError('you must bee logged in');
   }
@@ -27,9 +26,17 @@ module.exports = {
       return pinAdded;
     }),
     deletePin: authenticated(async (root, args, context) => {
-      console.log({ args })
       const pinDeleted = await Pin.findOneAndDelete({ id: args.pindId }).exec();
       return pinDeleted;
+    }),
+    createComment: authenticated(async (root, args, context) => {
+      const newComment = { text: args.text, author: context.currentUser._id };
+      const pinUpdated = await Pin.findOneAndUpdate(
+        { _id: args.pinId }, 
+        { $push: { comments: newComment } },
+        { new: true },
+      ).populate('author').populate('comments.author');
+      return pinUpdated
     })
   }
 }
