@@ -34,12 +34,12 @@ const Root = () => {
   return (
     <Router>
       <ApolloProvider client={client}>
-      <Context.Provider value={{ state, dispatch }}>
-        <Switch>
-          <ProtectedRoute exact path="/" component={App} />
-          <Route path="/login" component={Splash} />
-        </Switch>
-      </Context.Provider>
+        <Context.Provider value={{ state, dispatch }}>
+          <Switch>
+            <ProtectedRoute exact path="/" component={App} />
+            <Route path="/login" component={Splash} />
+          </Switch>
+        </Context.Provider>
       </ApolloProvider>
     </Router>
   );
