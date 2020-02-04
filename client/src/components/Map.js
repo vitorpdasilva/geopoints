@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import ReactMapGL, { NavigationControl, Marker, Popup } from 'react-map-gl';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import differenceInMinutes from 'date-fns/difference_in_minutes';
 import { useClient } from '../client';
 import { withStyles } from "@material-ui/core/styles";
@@ -21,6 +22,7 @@ const INITIAL_VIEWPORT = {
 
 const Map = ({ classes }) => {
   const client = useClient();
+  const mobileSize = useMediaQuery('(max-width: 650px)')
   const { state, dispatch } = useContext(Context);
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT)
   const [userPosition, setUserPosition] = useState(null);
@@ -78,8 +80,9 @@ const Map = ({ classes }) => {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGL
+        scrollZoom={!mobileSize}
         mapboxApiAccessToken="pk.eyJ1Ijoidml0b3Jib2NjaW8iLCJhIjoiY2sydTZocHhyMWo3MjNjbnZxZTIzYXV4eCJ9.30nWKX57ciRhrTFL3Pab1Q"
         width="100vw"
         height="calc(100vh - 64px)"
