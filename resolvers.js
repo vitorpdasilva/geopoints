@@ -28,7 +28,7 @@ module.exports = {
     }),
     deletePin: authenticated(async (root, args, context) => {
       console.log({ args })
-      const pinDeleted = await Pin.findOneAndDelete({ id: args.pindId }).exec();
+      const pinDeleted = await Pin.findOneAndDelete({ id: args.pinId }).exec();
       return pinDeleted;
     })
   }
