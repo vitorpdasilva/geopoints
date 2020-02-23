@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
+
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -13,6 +15,7 @@ import { useClient } from '../../client';
 import Context from '../../context';
 
 const CreatePin = ({ classes }) => {
+  const mobileSize = useMediaQuery('(max-width: 650px)');
   const client = useClient()
   const { state, dispatch } = useContext(Context);
   const [title, setTitle] = useState("");
@@ -34,8 +37,7 @@ const CreatePin = ({ classes }) => {
         longitude,
 
       }
-      const { createPin } = await client.request(CREATE_PIN_MUTATION, variables);
-      dispatch({ type: "CREATE_PIN", payload: createPin });
+      await client.request(CREATE_PIN_MUTATION, variables);
       handleDeleteDraft()
     } catch (err) {
       setSubmitting(false);
@@ -103,11 +105,11 @@ const CreatePin = ({ classes }) => {
           name="content"
           label="content"
           multiline
-          rows="6"
           margin="normal"
           fullWidth
           variant="outlined"
           onChange={e => setContent(e.target.value)}
+          rows={mobileSize ? "3" : "6"}
         />
       </div>
       <div>
